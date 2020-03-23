@@ -15,13 +15,10 @@ use App\Services\v1\AirportService;
 class AirportController extends Controller
 {
     protected $service;
-    protected $flights;
-    public function __construct(AirportService $aservice, FlightService $service) {
+    public function __construct(AirportService $aservice) {
         $this->service = $aservice;
 
-        $this->flights = $service;
-
-//        $this->middleware('auth:api', ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware('auth:api', ['only' => ['store', 'update', 'destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -78,11 +75,11 @@ class AirportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->flights->validate($request->all());
+//        $this->service->validate($request->all());
         
         try {
-            $flight = $this->flights->updateFlight($request, $id);
-            return response()->json($flight, 200);
+            $obj = $this->service->update($request, $id);
+            return response()->json($obj, 200);
         } 
         catch (ModelNotFoundException $ex) {
             throw $ex;
@@ -101,7 +98,7 @@ class AirportController extends Controller
     public function destroy($id)
     {
         try {
-            $flight = $this->flights->deleteFlight($id);
+            $obj = $this->service->delete($id);
             return response()->make('', 204);
         } 
         catch (ModelNotFoundException $ex) {
