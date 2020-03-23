@@ -178,6 +178,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Providers\v1\AirportServiceProvider::class,
         App\Providers\v1\FlightServiceProvider::class
 
     ],

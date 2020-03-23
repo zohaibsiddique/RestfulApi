@@ -20,3 +20,7 @@ use Illuminate\Http\Request;
 Route::resource('/v1/flights', v1\FlightController::class, [
     'except' => ['create', 'edit']
 ]);
+
+Route::resource('/v1/airports', v1\AirportController::class, [
+    'except' => ['create', 'edit']
+]);

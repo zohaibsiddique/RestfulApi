@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Services\v1\FlightService;
+use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Services\v1\FlightService;
+use App\Services\v1\AirportService;
 
-class FlightController extends Controller
+class AirportController extends Controller
 {
+    protected $service;
     protected $flights;
-    public function __construct(FlightService $service) {
+    public function __construct(AirportService $aservice, FlightService $service) {
+        $this->service = $aservice;
+
         $this->flights = $service;
 
 //        $this->middleware('auth:api', ['only' => ['store', 'update', 'destroy']]);
@@ -26,7 +31,7 @@ class FlightController extends Controller
     public function index()
     {
         $parameters = request()->input();
-        $data = $this->flights->getFlights($parameters);
+        $data = $this->service->getAirports($parameters);
         return response()->json($data);
     }
 
@@ -39,11 +44,10 @@ class FlightController extends Controller
      */
     public function store(Request $request)
     {
-        $this->flights->validate($request->all());
-
+//        $this->flights->validate($request->all());
         try {
-            $flight = $this->flights->createFlight($request);
-            return response()->json($flight, 201);
+            $data = $this->service->store($request);
+            return response()->json($data, 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
