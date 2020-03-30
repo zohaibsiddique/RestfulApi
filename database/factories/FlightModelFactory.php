@@ -2,9 +2,8 @@
 
 $factory->define(App\Airport::class, function (Faker\Generator $faker) {
     return [
-        'iataCode' => str_random(3),
-        'city' => $faker->city,
-        'state' => $faker->stateAbbr
+        'name' => str_random(3),
+        'is_synced' => 0
     ];
 });
 

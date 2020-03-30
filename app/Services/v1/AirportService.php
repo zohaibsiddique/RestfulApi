@@ -50,11 +50,38 @@ class AirportService {
 
     public function store($req) {
         $obj = new Airport();
-        $obj->iataCode = $req->input('iataCode');
-        $obj->city =$req->input('city');
-        $obj->state =$req->input('state');
+        $obj->name = $req->input('name');
+        $obj->created_at = $req->input('created_at');
+        $obj->updated_at = $req->input('updated_at');
+        $obj->is_synced =$req->input('is_synced');
         $obj->save();
         return $obj;
+    }
+
+    public function pushList($req) {
+        $json = json_decode($req->getContent(), true);
+        foreach ($json as $key => $value) {
+            $users = new Airport;
+            $users->name = $value['name'];
+            $users->is_synced = $value['is_synced'];
+            $users->updated_at = $value['updated_at'];
+            $users->created_at = $value['created_at'];
+            $users->save();
+        }
+        return $json;
+    }
+
+    public function updateList($req) {
+        $json = json_decode($req->getContent(), true);
+        foreach ($json as $key => $value) {
+            $users = Airport::where('id', $value['id'])->firstOrFail();
+            $users->name = $value['name'];
+            $users->is_synced = $value['is_synced'];
+            $users->updated_at = $value['updated_at'];
+            $users->created_at = $value['created_at'];
+            $users->save();
+        }
+        return $json;
     }
 
     public function update($req, $id) {

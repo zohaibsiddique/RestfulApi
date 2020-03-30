@@ -18,7 +18,7 @@ class AirportController extends Controller
     public function __construct(AirportService $aservice) {
         $this->service = $aservice;
 
-        $this->middleware('auth:api', ['only' => ['store', 'update', 'destroy']]);
+//        $this->middleware('auth:api', ['only' => ['store', 'update', 'destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -41,13 +41,25 @@ class AirportController extends Controller
      */
     public function store(Request $request)
     {
-//        $this->flights->validate($request->all());
         try {
-            $data = $this->service->store($request);
-            return response()->json($data, 201);
+            if($request->input('push_list')){
+                $data =  $this->service->pushList($request);
+                return response()->json($data, 201);
+            }else{
+                $data =  $this->service->store($request);
+                return response()->json($data, 201);
+            }
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+//        $this->flights->validate($request->all());
+//        try {
+//            return $this->service->store($request);
+////            $data =  $this->service->store($request);
+////            return response()->json($data, 201);
+//        } catch (Exception $e) {
+//            return response()->json(['message' => $e->getMessage()], 500);
+//        }
     }
 
     /**
@@ -76,15 +88,16 @@ class AirportController extends Controller
     public function update(Request $request, $id)
     {
 //        $this->service->validate($request->all());
-        
+
         try {
-            $obj = $this->service->update($request, $id);
-            return response()->json($obj, 200);
-        } 
-        catch (ModelNotFoundException $ex) {
-            throw $ex;
-        }
-        catch (Exception $e) {
+            if($request->input('update_list')){
+                $data =  $this->service->updateList($request);
+                return response()->json($data, 201);
+            }else{
+                $obj = $this->service->update($request, $id);
+                return response()->json($obj, 200);
+            }
+        } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }

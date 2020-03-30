@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Airport extends Model
 {
-    
+
+    public $timestamps = false;
+
     public function arrivingFlights() {
         return $this->hasMany('App\Flight', 'arrivalAirport_id');
     }
